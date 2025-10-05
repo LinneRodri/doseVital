@@ -583,3 +583,90 @@ html, body {
     line-height: 24px;
     text-align: center;
 }
+/* --- CORREÇÕES DE DESIGN DO FORMULÁRIO DE MEDICAÇÃO --- */
+
+/* 1. AJUSTES NO CHECKBOX "É UM TRATAMENTO RECORRENTE?" */
+
+/* Container que segura o texto e o checkbox */
+.form-group-inline {
+  display: flex; /* Usa Flexbox para controlar o alinhamento */
+  flex-direction: row-reverse; /* INVERTE A ORDEM dos elementos (o checkbox vai para a direita) */
+  justify-content: flex-end; /* Alinha o conteúdo todo à esquerda */
+  align-items: center; /* Centraliza o texto e o checkbox verticalmente */
+  margin-bottom: 20px; /* Adiciona um espaçamento padrão abaixo */
+  padding-left: 2px; /* Pequeno ajuste para alinhar perfeitamente com os títulos acima */
+}
+
+/* O texto "É um tratamento recorrente?" */
+.form-group-inline label {
+  margin: 0; /* Remove margens antigas */
+  margin-right: auto; /* Empurra o checkbox para o outro lado */
+  margin-left: 10px; /* Cria um espaço entre o checkbox e o texto */
+  font-weight: normal; /* Mantém o texto com peso normal */
+}
+
+/* O checkbox em si */
+.form-group-inline .recorrente-checkbox {
+  transform: scale(1.5); /* AUMENTA O TAMANHO do checkbox em 50% */
+  /* O transform não afeta o layout, então não precisa de margem extra */
+}
+
+
+/* 2. PADRONIZAÇÃO DOS CAMPOS "FREQUÊNCIA" E "DURAÇÃO" */
+
+/* O container de cada um (texto + caixa) */
+.form-group-recorrente {
+  display: flex;
+  flex-direction: column; /* Força o texto (label) a ficar EM CIMA da caixa (input) */
+  margin-bottom: 15px; /* Espaçamento entre eles */
+}
+
+/* O texto (label) */
+.form-group-recorrente label {
+  margin-bottom: 5px; /* Espaço entre o texto e a caixa */
+  font-size: 16px; /* Tamanho da fonte igual aos outros labels */
+  font-weight: 600; /* Deixa o texto em negrito, como os outros */
+}
+
+/* A caixa de digitação (input) */
+.form-group-recorrente input {
+  width: 100%; /* Faz a caixa ocupar TODA a largura, como o campo "Nome do Medicamento" */
+  padding: 12px; /* Espaçamento interno para o texto ficar confortável */
+  border: 1px solid #E2E8F0; /* Borda sutil */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-sizing: border-box; /* Garante que o padding não afete a largura total */
+  font-size: 1rem;
+}
+/* --- ESTILO PARA O BOTÃO DE REMOVER MEDICAMENTO --- */
+
+/* Primeiro, precisamos garantir que o container do medicamento 
+  possa ser uma referência para o posicionamento do botão.
+*/
+.medicamento-item {
+  position: relative;
+  /* Adiciona um pouco de espaço à direita para o botão não sobrepor o conteúdo */
+  padding-right: 40px; 
+}
+
+/* O botão 'x' em si */
+.remove-med-btn {
+  /* Posicionamento */
+  position: absolute;
+  top: 15px;
+  right: 10px;
+
+  /* Aparência */
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: bold;
+  color: #a0aec0; /* Um cinza sutil */
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+/* Efeito ao passar o mouse */
+.remove-med-btn:hover {
+  color: #e53e3e; /* Vermelho para indicar perigo/exclusão */
+}

@@ -229,6 +229,22 @@ function adicionarNovoMedicamento() {
     novoMedicamento.querySelector('.recorrente-checkbox').checked = false;
     novoMedicamento.querySelector('.opcoes-recorrentes').style.display = 'none';
     
+    // --- NOVO TRECHO ADICIONADO AQUI ---
+    // 1. Cria o elemento do botão
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button'; // Impede que o botão envie o formulário
+    removeBtn.textContent = '×'; // O caractere 'x' de fechar
+    removeBtn.className = 'remove-med-btn'; // Classe para o CSS estilizar
+
+    // 2. Define o que acontece quando o botão é clicado
+    removeBtn.onclick = () => {
+        novoMedicamento.remove(); // Remove o bloco de medicamento inteiro
+    };
+
+    // 3. Adiciona o botão 'x' ao novo bloco de medicamento
+    novoMedicamento.appendChild(removeBtn);
+    // --- FIM DO NOVO TRECHO ---
+    
     medicationsContainer.appendChild(novoMedicamento);
     configurarCheckboxes();
 }
