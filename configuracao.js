@@ -1,90 +1,74 @@
-// --- CONSTANTES E VARIÁVEIS GLOBAIS ---
+// --- CONSTANTE (deve ser a mesma do seu script.js principal) ---
 const USERS_STORAGE_KEY = 'doseCertaUsers';
-const LOGGED_IN_USER_KEY = 'loggedInUser';
-
-// CORREÇÃO: Dados iniciais agora incluem 'dateTime' e 'time' para evitar o bug "Data Inválida".
-const createInitialMed = (name, hour) => {
-    const date = new Date();
-    const [h, m] = hour.split(':');
-    date.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
-    
-    // Se o horário já passou hoje, agenda para amanhã.
-    if (new Date() > date) {
-        date.setDate(date.getDate() + 1);
-    }
-
-    return {
-        name: name,
-        dateTime: date.toISOString(),
-        time: hour,
-        given: false,
-        overdue: false
-    };
-};
-
-const initialPatientData = [
-    { 
-        id: 'p' + Date.now(), 
-        name: 'João Silva (Exemplo)', 
-        room: 'Quarto 101', 
-        meds: [createInitialMed('Insulina', '08:00')] 
-    },
-    { 
-        id: 'p' + (Date.now() + 1), 
-        name: 'Maria Oliveira (Exemplo)', 
-        room: 'Quarto 105', 
-        meds: [createInitialMed('Dipirona', '14:00')] 
-    }
-];
 
 /**
- * Função principal de cadastro.
+ * Função chamada quando o formulário de cadastro é enviado.
+ * Ela salva a nova conta e redireciona para o login.
  */
 function saveAndRegister() {
+    // 1. PEGA OS DADOS DE TODOS OS CAMPOS DO SEU FORMULÁRIO HTML
+    const usernameInput = document.getElementById('residenceUsername');
+    const nameInput = document.getElementById('residenceName');
+    const passwordInput = document.getElementById('residencePassword');
+    const phoneInput = document.getElementById('residencePhone');
+    const emailInput = document.getElementById('residenceEmail');
+    const responsibleInput = document.getElementById('responsibleName');
+    const typeInput = document.getElementById('residenceType');
     const errorElement = document.getElementById('configError');
-    errorElement.textContent = "";
+    
+    // Limpa os valores de espaços em branco
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const email = emailInput.value.trim().toLowerCase();
+    const responsible = responsibleInput.value.trim();
+    const type = typeInput.value;
 
-    const username = document.getElementById('residenceUsername').value.trim();
-    const residenceName = document.getElementById('residenceName').value.trim();
-    const password = document.getElementById('residencePassword').value.trim();
-    const phone = document.getElementById('residencePhone').value.trim();
-    const email = document.getElementById('residenceEmail').value.trim();
-    const responsible = document.getElementById('responsibleName').value.trim();
-    const type = document.getElementById('residenceType').value;
+    errorElement.textContent = ''; // Limpa a mensagem de erro
 
-    if (!username || !residenceName || !password || !phone || !email || !responsible || !type) {
-        errorElement.textContent = "Por favor, preencha todos os campos.";
+    // 2. FAZ AS VALIDAÇÕES
+    if (!username || !password || !name || !email) {
+        errorElement.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+        return;
+    }
+    // Verifica se o username contém espaços
+    if (/\s/.test(username)) {
+        errorElement.textContent = 'O nome de usuário não pode conter espaços.';
         return;
     }
 
-    if (username.includes(' ')) {
-        errorElement.textContent = "O Nome de Usuário não pode conter espaços.";
-        return;
-    }
-
+    // 3. CARREGA OS USUÁRIOS EXISTENTES
     const allUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
 
+    // 4. VERIFICA SE O USUÁRIO JÁ EXISTE
     const userExists = allUsers.some(user => user.username.toLowerCase() === username.toLowerCase());
     if (userExists) {
-        errorElement.textContent = "Este Nome de Usuário já está em uso.";
+        errorElement.textContent = 'Este nome de usuário já está em uso. Tente outro.';
         return;
     }
 
-    const newUser = {
-        username: username,
-        password: password,
-        residenceConfig: { 
-            name: residenceName, 
-            phone, email, responsible, type, 
-            configured: true 
+    // 5. CRIA O NOVO USUÁRIO COM A ESTRUTURA CORRETA
+    const newUserObject = {
+        username: username,      // Usado para o login
+        password: password,      // Usado para o login
+        residenceConfig: {       // Objeto com todas as outras informações
+            name: name,
+            phone: phone,
+            email: email,
+            responsible: responsible,
+            type: type
         },
-        patients: initialPatientData // Usaa os dados corrigidos
+        patients: []             // Lista de pacientes começa vazia
     };
 
-    allUsers.push(newUser);
+    // 6. ADICIONA O NOVO USUÁRIO À LISTA E SALVA
+    allUsers.push(newUserObject);
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(allUsers));
-    
-    localStorage.setItem(LOGGED_IN_USER_KEY, username);
 
-    window.location.href = 'index.html';
+    alert("Conta criada com sucesso! Você será redirecionado para o painel.");
+    
+    // LOGA AUTOMATICAMENTE O USUÁRIO E REDIRECIONA
+    localStorage.setItem('loggedInUser', username); // Marca o novo usuário como logado
+    window.location.href = 'index.html'; // Redireciona para a página principal
 }

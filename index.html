@@ -23,7 +23,8 @@
     <div id="loginScreen">
         <div class="login-box">
             <h1 class="login-title">Ritmo Vital</h1>
-            <input type="email" id="loginEmail" placeholder="Seu E-mail" required><br><input type="password" id="loginPassword" placeholder="Senha" required><br>
+            <input type="text" id="loginUsername" placeholder="Seu Usuário" required>
+            <input type="password" id="loginPassword" placeholder="Senha" required><br>
             <p id="loginError"></p>
             <button onclick="handleLogin()" class="login-btn">Entrar</button>
             <p class="register-prompt">
@@ -78,30 +79,31 @@
             <h4 style="margin-bottom: 15px;">Informações da Medicação</h4>
 
             <div id="medications-container">
-                <div class="medication-entry">
-                    <div class="form-group">
-                        <label>Nome do Medicamento</label>
-                        <input type="text" class="med-name-input" placeholder="Ex: Dipirona" required>
+                            <div class="medication-entry medicamento-item">
+                <div class="form-group">
+                    <label>Nome do Medicamento</label>
+                    <input type="text" class="med-name-input" placeholder="Ex: Dipirona" required>
+                </div>
+                <div class="form-group">
+                    <label>Horário da Dose</label>
+                    <input type="time" class="med-time-input" required>
+                </div>
+                <div class="form-group form-group-inline">
+                    <input type="checkbox" class="recorrente-checkbox">
+                    <label>É um tratamento recorrente?</label>
+                </div>
+                <div class="opcoes-recorrentes" style="display: none;">
+                    <h4>Detalhes do Tratamento</h4>
+                    <div class="form-group-recorrente">
+                        <label for="frequencia">Frequência (a cada quantas horas)</label>
+                        <input type="number" class="frequencia-input" placeholder="Ex: 8">
                     </div>
-                    <div class="form-group">
-                        <label>Horário da Dose</label>
-                        <input type="time" class="med-time-input" required>
-                    </div>
-                    <div class="form-group form-group-inline">
-                        <input type="checkbox" class="is-recurring-checkbox" onchange="toggleRecurringFields(this)">
-                        <label>É um tratamento recorrente?</label>
-                    </div>
-                    <div class="recurringFields" style="display: none;">
-                        <div class="form-group">
-                            <label>A cada quantas horas?</label>
-                            <input type="number" class="med-frequency-input" placeholder="Ex: 6" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Durante quantos dias?</label>
-                            <input type="number" class="med-duration-input" placeholder="Ex: 4" min="1">
-                        </div>
+                    <div class="form-group-recorrente">
+                        <label for="duracao">Duração do tratamento (em dias)</label>
+                        <input type="number" class="duracao-input" placeholder="Ex: 7">
                     </div>
                 </div>
+            </div>
             </div>
 
             <button type="button" id="add-med-btn" class="btn btn-info" style="width: 100%; margin-top: 10px;">+ Adicionar outro medicamento</button>
