@@ -291,9 +291,16 @@ html, body {
 /* --- MODAIS (Pop-ups) --- */
 /* ------------------------------------------- */
 .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     background-color: rgba(45, 55, 72, 0.6);
-    display: none; justify-content: center; align-items: center; z-index: 1000;
+    display: none; /* <-- ESSA É A LINHA MAIS IMPORTANTE */
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000;
     backdrop-filter: blur(4px);
 }
 
@@ -302,6 +309,8 @@ html, body {
     max-width: 500px; width: 90%;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     position: relative; /* CORREÇÃO: Necessário para o botão 'X' funcionar */
+    max-height: 85vh; /* Limita a altura máxima a 85% da tela */
+    overflow-y: auto;
 }
 
 /* CORREÇÃO: Estilo do botão 'X' */
@@ -547,4 +556,30 @@ html, body {
 
 .form-group-inline label {
     margin-bottom: 0; /* Remove a margem extra da label */
+}
+/* No final de style.css */
+
+.medication-entry {
+    background-color: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative; /* Para o botão de remover */
+}
+
+.remove-med-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 24px;
+    text-align: center;
 }

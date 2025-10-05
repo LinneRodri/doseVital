@@ -19,58 +19,6 @@
             <div id="modalBody"></div>
         </div>
     </div>
-
-    <div id="addClientModal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close-modal-btn" onclick="fecharNovoClienteModal()">&times;</span>
-            <h3 style="text-align: center;">Adicionar Novo Paciente</h3>
-            <form id="newClientForm" onsubmit="event.preventDefault(); adicionarNovoCliente();">
-                <div class="form-group">
-                    <label for="clientName">Nome Completo</label>
-                    <input type="text" id="clientName" placeholder="Ex: Lucas Mendes" required>
-                </div>
-                <div class="form-group">
-                    <label for="clientRoom">Quarto / Leito</label>
-                    <input type="text" id="clientRoom" placeholder="Ex: Quarto 205" required>
-                </div>
-
-                <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E2E8F0;">
-                <h4 style="margin-bottom: 15px;">Informações da Medicação</h4>
-
-                <div class="form-group">
-                    <label for="medName">Nome do Medicamento</label>
-                    <input type="text" id="medName" placeholder="Ex: Dipirona" required>
-                </div>
-                <div class="form-group">
-                    <label for="medTime">Horário da Dose</label>
-                    <input type="time" id="medTime" required>
-                </div>
-
-                <div class="form-group form-group-inline">
-                    <input type="checkbox" id="isRecurring" onchange="toggleRecurringFields()">
-                    <label for="isRecurring">É um tratamento recorrente?</label>
-                </div>
-
-                <div id="recurringFields" style="display: none;">
-                    <div class="form-group">
-                        <label for="medFrequency">A cada quantas horas?</label>
-                        <input type="number" id="medFrequency" placeholder="Ex: 6" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="medDuration">Durante quantos dias?</label>
-                        <input type="number" id="medDuration" placeholder="Ex: 4" min="1">
-                    </div>
-                </div>
-        
-                <p id="clientError" style="color: #e74c3c; height: 1em;"></p>
-            
-                <div class="button-group">
-                    <button type="button" onclick="fecharNovoClienteModal()" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Adicionar</button>
-                </div>
-            </form>
-        </div>
-    </div>
     
     <div id="loginScreen">
         <div class="login-box">
@@ -111,6 +59,62 @@
             <div id="patientListContainer"></div>
         </div>
     </div>
+
+    <div id="addClientModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-modal-btn" onclick="fecharNovoClienteModal()">&times;</span>
+        <h3 style="text-align: center;">Adicionar Novo Paciente</h3>
+        <form id="newClientForm" onsubmit="event.preventDefault(); adicionarNovoCliente();">
+            <div class="form-group">
+                <label for="clientName">Nome Completo</label>
+                <input type="text" id="clientName" placeholder="Ex: Lucas Mendes" required>
+            </div>
+            <div class="form-group">
+                <label for="clientRoom">Quarto / Leito</label>
+                <input type="text" id="clientRoom" placeholder="Ex: Quarto 205" required>
+            </div>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E2E8F0;">
+            <h4 style="margin-bottom: 15px;">Informações da Medicação</h4>
+
+            <div id="medications-container">
+                <div class="medication-entry">
+                    <div class="form-group">
+                        <label>Nome do Medicamento</label>
+                        <input type="text" class="med-name-input" placeholder="Ex: Dipirona" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Horário da Dose</label>
+                        <input type="time" class="med-time-input" required>
+                    </div>
+                    <div class="form-group form-group-inline">
+                        <input type="checkbox" class="is-recurring-checkbox" onchange="toggleRecurringFields(this)">
+                        <label>É um tratamento recorrente?</label>
+                    </div>
+                    <div class="recurringFields" style="display: none;">
+                        <div class="form-group">
+                            <label>A cada quantas horas?</label>
+                            <input type="number" class="med-frequency-input" placeholder="Ex: 6" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Durante quantos dias?</label>
+                            <input type="number" class="med-duration-input" placeholder="Ex: 4" min="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-med-btn" class="btn btn-info" style="width: 100%; margin-top: 10px;">+ Adicionar outro medicamento</button>
+
+            <p id="clientError" style="color: #e74c3c; height: 1em;"></p>
+        
+            <div class="button-group">
+                <button type="button" onclick="fecharNovoClienteModal()" class="btn btn-secondary">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </div>
+        </form>
+    </div>
+</div>
     
     <button id="addClientBtn" onclick="abrirNovoClienteModal()" class="add-client-btn">+</button>
 

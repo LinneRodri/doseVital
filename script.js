@@ -11,6 +11,7 @@ let currentFilter = 'todos';
 
 // --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('add-med-btn').addEventListener('click', addMedicationField);
     allUsersData = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
     checkLoginStatus();
 });
@@ -191,17 +192,20 @@ function excluirPaciente(patientId) {
     }
 }
 
-function toggleMedicationGiven(patientId, medIndex) {
-    if (!confirm("Confirmar administração da dose?")) return;
-    const patient = patientData.find(p => p.id === patientId);
-    if (patient && patient.meds[medIndex]) {
-        const med = patient.meds[medIndex];
-        med.given = true;
-        med.overdue = false;
-        med.givenAt = new Date().toISOString();
-        saveUserData();
-        checkScheduleAndRender();
-        abrirDetalhes(patientId);
+function toggleRecurringFields(checkbox) {
+    const parentEntry = checkbox.closest('.medication-entry');
+    const recurringFieldsDiv = parentEntry.querySelector('.recurringFields');
+    const frequencyInput = parentEntry.querySelector('.med-frequency-input');
+    const durationInput = parentEntry.querySelector('.med-duration-input');
+
+    if (checkbox.checked) {
+        recurringFieldsDiv.style.display = 'block';
+        frequencyInput.required = true;
+        durationInput.required = true;
+    } else {
+        recurringFieldsDiv.style.display = 'none';
+        frequencyInput.required = false;
+        durationInput.required = false;
     }
 }
 
@@ -292,8 +296,16 @@ function toggleRecurringFields() {
 function abrirNovoClienteModal() {
     document.getElementById('addClientModal').style.display = 'flex';
     document.getElementById('newClientForm').reset();
-    // Garante que os campos recorrentes comecem escondidos
-    toggleRecurringFields();
+
+    const container = document.getElementById('medications-container');
+    const allEntries = container.querySelectorAll('.medication-entry');
+    allEntries.forEach((entry, index) => {
+        if (index > 0) {
+            entry.remove();
+        }
+    });
+    
+    toggleRecurringFields(document.querySelector('.is-recurring-checkbox'));
 }
 
 /**
@@ -303,76 +315,114 @@ function adicionarNovoCliente() {
     const errorSpan = document.getElementById('clientError');
     errorSpan.textContent = '';
 
-    // Dados comuns
     const nome = document.getElementById('clientName').value.trim();
     const quarto = document.getElementById('clientRoom').value.trim();
-    const medName = document.getElementById('medName').value.trim();
-    const medTime = document.getElementById('medTime').value; // Alterado de medStartTime
-    const isRecurring = document.getElementById('isRecurring').checked;
 
-    if (!nome || !quarto || !medName || !medTime) {
-        errorSpan.textContent = "Preencha os dados do paciente e do medicamento.";
+    if (!nome || !quarto) {
+        errorSpan.textContent = "Preencha o nome e o quarto do paciente.";
         return;
     }
 
-    const meds = [];
-    const now = new Date();
-    let firstDoseDate = new Date();
-    const [startHour, startMinute] = medTime.split(':');
-    firstDoseDate.setHours(parseInt(startHour, 10), parseInt(startMinute, 10), 0, 0);
+    const allMedsForPatient = [];
+    const medicationEntries = document.querySelectorAll('#medications-container .medication-entry');
 
-    // Lógica para Dose Única
-    if (!isRecurring) {
-        // Se a hora já passou hoje, agenda para o dia seguinte
-        if (firstDoseDate < now) {
-            firstDoseDate.setDate(firstDoseDate.getDate() + 1);
-        }
-        meds.push({
-            name: medName,
-            dateTime: firstDoseDate.toISOString(),
-            time: firstDoseDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-            given: false,
-            overdue: false,
-            givenAt: null
-        });
-    }
-    // Lógica para Tratamento Recorrente
-    else {
-        const frequency = parseInt(document.getElementById('medFrequency').value, 10);
-        const duration = parseInt(document.getElementById('medDuration').value, 10);
+    for (const entry of medicationEntries) {
+        const medName = entry.querySelector('.med-name-input').value.trim();
+        const medTime = entry.querySelector('.med-time-input').value;
+        const isRecurring = entry.querySelector('.is-recurring-checkbox').checked;
 
-        if (isNaN(frequency) || isNaN(duration) || frequency < 1 || duration < 1) {
-            errorSpan.textContent = "Preencha a frequência e a duração corretamente.";
+        if (!medName || !medTime) {
+            errorSpan.textContent = "Preencha o nome e o horário para todos os medicamentos.";
             return;
         }
 
-        // Garante que a primeira dose seja sempre no futuro
-        while (firstDoseDate < now) {
-            firstDoseDate.setHours(firstDoseDate.getHours() + frequency);
-        }
+        const now = new Date();
+        let firstDoseDate = new Date();
+        const [startHour, startMinute] = medTime.split(':');
+        firstDoseDate.setHours(parseInt(startHour, 10), parseInt(startMinute, 10), 0, 0);
 
-        let currentDoseDate = new Date(firstDoseDate.getTime());
-        const totalDoses = (duration * 24) / frequency;
-
-        for (let i = 0; i < totalDoses; i++) {
-            if (i > 0) {
-                currentDoseDate.setHours(currentDoseDate.getHours() + frequency);
+        if (!isRecurring) {
+            if (firstDoseDate < now) {
+                firstDoseDate.setDate(firstDoseDate.getDate() + 1);
             }
-            const doseDate = new Date(currentDoseDate.getTime());
-            meds.push({
+            allMedsForPatient.push({
                 name: medName,
-                dateTime: doseDate.toISOString(),
-                time: doseDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-                given: false,
-                overdue: false,
-                givenAt: null
+                dateTime: firstDoseDate.toISOString(),
+                time: firstDoseDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+                given: false, overdue: false, givenAt: null
             });
+        } else {
+            const frequencyInput = entry.querySelector('.med-frequency-input');
+            const durationInput = entry.querySelector('.med-duration-input');
+            const frequency = parseInt(frequencyInput.value, 10);
+            const duration = parseInt(durationInput.value, 10);
+
+            if (isNaN(frequency) || isNaN(duration) || frequency < 1 || duration < 1) {
+                errorSpan.textContent = "Preencha a frequência e a duração corretamente para medicamentos recorrentes.";
+                return;
+            }
+
+            while (firstDoseDate < now) {
+                firstDoseDate.setHours(firstDoseDate.getHours() + frequency);
+            }
+
+            let currentDoseDate = new Date(firstDoseDate.getTime());
+            const totalDoses = Math.floor((duration * 24) / frequency);
+
+            for (let i = 0; i < totalDoses; i++) {
+                if (i > 0) {
+                    currentDoseDate.setHours(currentDoseDate.getHours() + frequency);
+                }
+                const doseDate = new Date(currentDoseDate.getTime());
+                allMedsForPatient.push({
+                    name: medName,
+                    dateTime: doseDate.toISOString(),
+                    time: doseDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+                    given: false, overdue: false, givenAt: null
+                });
+            }
         }
     }
 
+    if (allMedsForPatient.length === 0) {
+        errorSpan.textContent = "Adicione pelo menos um medicamento.";
+        return;
+    }
+
     if (!loggedInUser.patients) loggedInUser.patients = [];
-    loggedInUser.patients.push({ id: generateId(), name: nome, room: quarto, meds: meds });
+    loggedInUser.patients.push({ id: generateId(), name: nome, room: quarto, meds: allMedsForPatient });
+    
     saveUserData();
     checkScheduleAndRender();
     fecharNovoClienteModal();
+}
+function addMedicationField() {
+    const container = document.getElementById('medications-container');
+    const firstEntry = container.querySelector('.medication-entry');
+    const newEntry = firstEntry.cloneNode(true); // Clona o primeiro bloco
+
+    // Limpa os valores dos inputs clonados
+    newEntry.querySelectorAll('input').forEach(input => {
+        if(input.type === 'checkbox') {
+            input.checked = false;
+        } else {
+            input.value = '';
+        }
+    });
+
+    // Garante que os campos recorrentes do clone comecem escondidos
+    const recurringFields = newEntry.querySelector('.recurringFields');
+    recurringFields.style.display = 'none';
+    
+    // Adiciona um botão de remover ao novo bloco
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = '×';
+    removeBtn.className = 'remove-med-btn';
+    removeBtn.onclick = () => {
+        newEntry.remove();
+    };
+    newEntry.appendChild(removeBtn);
+    
+    container.appendChild(newEntry);
 }
