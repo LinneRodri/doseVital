@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Dose Certa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="profile-container">
+        <h2>Minhas Informações</h2>
+        <form id="profileForm" onsubmit="event.preventDefault();">
+            <div class="form-group">
+                <label>Usuário (Não pode ser alterado)</label>
+                <input type="text" id="profileUsername" disabled>
+            </div>
+            <div class="form-group">
+                <label for="profileResidenceName">Nome da Residência/Clínica</label>
+                <input type="text" id="profileResidenceName" required disabled>
+            </div>
+            <div class="form-group">
+                <label for="profilePassword">Nova Senha (deixe em branco para não alterar)</label>
+                <input type="password" id="profilePassword" placeholder="******" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="profilePhone">Telefone de Contato</label>
+                <input type="tel" id="profilePhone" placeholder="(00) 00000-0000" required disabled>
+            </div>
+            <div class="form-group">
+                <label for="profileEmail">Email de Contato</label>
+                <input type="email" id="profileEmail" required disabled>
+            </div>
+            <div class="form-group">
+                <label for="profileResponsible">Nome do Responsável Legal</label>
+                <input type="text" id="profileResponsible" required disabled>
+            </div>
+            <div class="form-group">
+                <label for="profileType">Tipo de Unidade</label>
+                <select id="profileType" required disabled>
+                    <option value="" disabled>Selecione o tipo</option>
+                    <option value="casa">Casa de Repouso</option>
+                    <option value="hospital">Clínica/Hospital</option>
+                    <option value="lar">Lar de Idosos</option>
+                    <option value="particular">Uso Particular</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <a href="index.html" class="btn btn-info">Voltar Início</a>
+                <button id="editButton" class="btn btn-info" onclick="toggleEditMode(true)">Editar</button>
+                <button id="saveButton" class="btn btn-primary" style="display: none;" onclick="saveChanges()">Salvar</button>
+                <button id="cancelButton" type="button" class="btn btn-danger" style="display: none;" onclick="toggleEditMode(false)">Cancelar</button>
+            </div>
+            
+            <p id="profileError"></p>
+        </form>
+    </div>
+
+    <script src="perfil.js"></script>
+
+</body>
+</html>

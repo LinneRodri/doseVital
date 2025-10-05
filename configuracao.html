@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Ritmo Vital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px 0;">
+
+    <div class="config-container">
+        <h2>Seja bem-vindo(a)!</h2>
+        <p style="text-align: center; color: #4A5568; margin-top: -15px; margin-bottom: 25px;">Crie sua conta para começar a gerenciar os cuidados.</p>
+
+        <form id="residenceConfigForm" onsubmit="event.preventDefault(); saveAndRegister();">
+            
+            <div class="form-group-config">
+                <label for="residenceUsername">Crie um Nome de Usuário (Sem espaços)</label>
+                <input type="text" id="residenceUsername" required placeholder="Ex: donarosa, clinica_sol">
+            </div>
+            <div class="form-group-config">
+                <label for="residenceName">Nome da Residência</label>
+                <input type="text" id="residenceName" required placeholder="Ex: Casa de Repouso Alegria">
+            </div>
+            <div class="form-group-config">
+                <label for="residencePassword">Crie uma Senha</label>
+                <input type="password" id="residencePassword" required>
+            </div>
+            
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E2E8F0;">
+
+            <div class="form-group-config">
+                <label for="residencePhone">Telefone de Contato</label>
+                <input type="tel" id="residencePhone" placeholder="(00) 00000-0000" required>
+            </div>
+            
+            <div class="form-group-config">
+                <label for="residenceEmail">Email de Contato</label>
+                <input type="email" id="residenceEmail" required>
+            </div>
+            <div class="form-group-config">
+                <label for="responsibleName">Nome do Responsável Legal</label>
+                <input type="text" id="responsibleName" required>
+            </div>
+            <div class="form-group-config">
+                <label for="residenceType">Tipo de Unidade</label>
+                <select id="residenceType" required>
+                    <option value="" disabled selected>Selecione o tipo</option>
+                    <option value="casa">Casa de Repouso</option>
+                    <option value="hospital">Clínicaa/Hospital</option>
+                    <option value="lar">Lar de Idosos</option>
+                    <option value="particular">Uso Particular</option>
+                </select>
+            </div>
+
+            <button type="submit" class="login-btn" style="width: 100%; margin-top: 15px;">
+                Criar Conta e Acessar Painel
+            </button>
+        </form>
+        
+        <p id="configError"></p>
+        
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="index.html" class="register-link">Já tenho uma conta</a>
+        </p>
+    </div>
+
+    <script src="configuracao.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ritmo Vital - Painel de Cuidados</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="detailsModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal-btn" onclick="fecharModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <div id="addClientModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal-btn" onclick="fecharNovoClienteModal()">&times;</span>
+            <h3 style="text-align: center;">Adicionar Novo Paciente</h3>
+            <form id="newClientForm" onsubmit="event.preventDefault(); adicionarNovoCliente();">
+                <div class="form-group">
+                    <label for="clientName">Nome Completo</label>
+                    <input type="text" id="clientName" placeholder="Ex: Lucas Mendes" required>
+                </div>
+                <div class="form-group">
+                    <label for="clientRoom">Quarto / Leito</label>
+                    <input type="text" id="clientRoom" placeholder="Ex: Quarto 205" required>
+                </div>
+
+                <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E2E8F0;">
+                <h4 style="margin-bottom: 15px;">Informações da Medicação</h4>
+
+                <div class="form-group">
+                    <label for="medName">Nome do Medicamento</label>
+                    <input type="text" id="medName" placeholder="Ex: Dipirona" required>
+                </div>
+                <div class="form-group">
+                    <label for="medTime">Horário da Dose</label>
+                    <input type="time" id="medTime" required>
+                </div>
+
+                <div class="form-group form-group-inline">
+                    <input type="checkbox" id="isRecurring" onchange="toggleRecurringFields()">
+                    <label for="isRecurring">É um tratamento recorrente?</label>
+                </div>
+
+                <div id="recurringFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="medFrequency">A cada quantas horas?</label>
+                        <input type="number" id="medFrequency" placeholder="Ex: 6" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="medDuration">Durante quantos dias?</label>
+                        <input type="number" id="medDuration" placeholder="Ex: 4" min="1">
+                    </div>
+                </div>
+        
+                <p id="clientError" style="color: #e74c3c; height: 1em;"></p>
+            
+                <div class="button-group">
+                    <button type="button" onclick="fecharNovoClienteModal()" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="loginScreen">
+        <div class="login-box">
+            <h1 class="login-title">Ritmo Vital</h1>
+            <input type="email" id="loginEmail" placeholder="Seu E-mail" required><br><input type="password" id="loginPassword" placeholder="Senha" required><br>
+            <p id="loginError"></p>
+            <button onclick="handleLogin()" class="login-btn">Entrar</button>
+            <p class="register-prompt">
+                Não tem uma conta? <a href="configuracao.html" class="register-link">Cadastre-se aqui</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="dashboardScreen">
+        <div class="header">
+            <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
+            <div class="header-title" id="headerDisplayName"></div>
+            <button onclick="fazerLogout()" class="logout-btn">Sair</button>
+        </div>
+        
+        <div id="sidebarMenu" class="sidebar">
+            <a href="javascript:void(0)" class="close-btn" onclick="toggleMenu()">&times;</a>
+            <a href="perfil.html">Meu Perfil</a>
+        </div>
+
+        <div class="dashboard">
+            <div id="relogioAtual" class="time-display"></div>
+            <div id="filterButtons" class="filter-container">
+                <button onclick="setFilter('todos')" class="filter-btn active-filter" data-filter="todos">TODOS</button>
+    
+                <button onclick="setFilter('vermelho')" class="filter-btn" data-filter="vermelho">ATRASADOS</button>
+    
+                <button onclick="setFilter('amarelo')" class="filter-btn" data-filter="amarelo">PRÓXIMOS</button>
+    
+                <button onclick="setFilter('verdae')" class="filter-btn" data-filter="verde">EM DIA</button>
+            </div>
+            <div id="alertaGeral" class="alerta-bar"></div>
+            <div id="patientListContainer"></div>
+        </div>
+    </div>
+    
+    <button id="addClientBtn" onclick="abrirNovoClienteModal()" class="add-client-btn">+</button>
+
+    <script src="script.js"></script>
+</body>
+</html>

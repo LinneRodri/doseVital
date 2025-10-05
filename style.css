@@ -1,0 +1,550 @@
+/* =========================================== */
+/* --- ESTILOS GLOBAIS E PADRÕES --- */
+/* =========================================== */
+html, body {
+    height: 100%;
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F9FA;
+    color: #2D3748;
+}
+
+/* Garante que a tela de login apareça corretamente no início */
+#loginScreen { display: flex; }
+#dashboardScreen { display: none; }
+
+
+/* ------------------------------------------- */
+/* --- TELA DE LOGIN --- */
+/* ------------------------------------------- */
+#loginScreen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #2D3748;
+}
+
+.login-title {
+    color: #34495e;
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.login-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+#loginScreen input {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #DDE2E8;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+#loginScreen input:focus {
+    border-color: #000000;
+    outline: none;
+}
+
+.login-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 10px;
+    background-color: #34495e;
+    color: white;
+    font-size: 1em;
+}
+.login-btn:hover {
+    background-color: #2c3e50;
+    transform: translateY(-2px);
+}
+
+#loginError {
+    color: #E53E3E;
+    height: 20px;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.register-prompt {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+.register-link {
+    color: #34495e;
+    font-weight: bold;
+    text-decoration: none;
+}
+.register-link:hover {
+    text-decoration: underline;
+}
+
+/* ------------------------------------------- */
+/* --- CABEÇALHO E MENU LATERAL --- */
+/* ------------------------------------------- */
+.header {
+    background-color: #FFFFFF;
+    padding: 0 25px;
+    font-size: 1.2em;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E2E8F0;
+    height: 65px;
+}
+
+.header-title {
+    flex-grow: 1;
+    text-align: center;
+    padding-left: 50px; /* Compensa o espaço do botão de menu */
+}
+
+.menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    color: #4A5568;
+}
+.menu-icon:hover {
+    color: #2D3748;
+}
+
+.logout-btn {
+    background-color: transparent;
+    border: none;
+    color: #4A5568;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+.logout-btn:hover {
+    background-color: #f1f5f9;
+    color: #E53E3E;
+}
+
+
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: -250px;
+    background-color: #2D3748;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+    box-shadow: 3px 0px 15px rgba(0,0,0,0.2);
+}
+.sidebar a {
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 1.1em;
+    color: #E2E8F0;
+    display: block;
+    transition: 0.2s;
+}
+.sidebar a:hover {
+    background-color: #4A5568;
+    color: #FFFFFF;
+}
+.sidebar .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 36px;
+}
+.sidebar.open {
+    left: 0;
+}
+
+/* ------------------------------------------- */
+/* --- DASHBOARD --- */
+/* ------------------------------------------- */
+.dashboard {
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.time-display {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 3em;
+    font-weight: 700;
+}
+
+.alerta-bar {
+    background-color: #E53E3E;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    margin: 0 auto 25px auto;
+    font-weight: bold;
+    border-radius: 8px;
+    font-size: 1.1em;
+    display: none; /* Controlado via JS */
+}
+
+.filter-container {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.filter-btn {
+    color: #4A5568;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    font-size: 0.9em;
+}
+.filter-btn:hover {
+    background-color: #EDF2F7;
+    border-color: #CBD5E0;
+}
+.filter-btn.active-filter {
+    color: white;
+    border-color: #2D3748;
+    background-color: #2D3748;
+    transform: scale(1.05);
+}
+
+/* ------------------------------------------- */
+/* --- CARD DO PACIENTE --- */
+/* ------------------------------------------- */
+.paciente-card {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(45, 55, 72, 0.08);
+    cursor: pointer;
+    border-left: 6px solid;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.paciente-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(45, 55, 72, 0.12);
+}
+
+.paciente-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.paciente-info {
+    flex-grow: 1;
+}
+
+.paciente-nome {
+    font-weight: 700;
+    font-size: 1.15em;
+}
+
+.paciente-status {
+    font-size: 0.95em;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* ------------------------------------------- */
+/* --- MODAIS (Pop-ups) --- */
+/* ------------------------------------------- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(45, 55, 72, 0.6);
+    display: none; justify-content: center; align-items: center; z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: white; padding: 30px 35px; border-radius: 12px;
+    max-width: 500px; width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative; /* CORREÇÃO: Necessário para o botão 'X' funcionar */
+}
+
+/* CORREÇÃO: Estilo do botão 'X' */
+.close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.close-modal-btn:hover {
+    color: #333;
+}
+
+.modal-content .form-group {
+    margin-bottom: 15px;
+}
+.modal-content .form-group label {
+    display: block;
+    font-weight: bold;
+    color: #4A5568;
+    margin-bottom: 5px;
+}
+.modal-content .form-group input,
+.modal-content .form-group select,
+.modal-content .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #CBD5E0;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Lista de Medicação no Modal de Detalhes */
+#modalBody {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.med-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #E2E8F0;
+}
+.med-item:last-child {
+    border-bottom: none;
+}
+.med-item span {
+    font-weight: 500;
+    padding-right: 10px;
+}
+
+/* ------------------------------------------- */
+/* --- BOTÕES --- */
+/* ------------------------------------------- */
+
+/* ------------------------------------------- */
+/* --- BOTÕES --- */
+/* ------------------------------------------- */
+
+/* Base para todos os botões do projeto */
+.btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 0.9em;
+    transition: all 0.2s;
+    display: inline-block;
+    color: white;
+    text-align: center;
+}
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Cores dos botões */
+.btn-primary {
+    background-color: #28a745; /* Verde Adicionar/Salvar */
+}
+.btn-secondary {
+    background-color: #7f8c8d; /* Cinza Cancelar */
+}
+.btn-info {
+    background-color: #34495e; /* Azul escuro Editar/Voltar */
+}
+.btn-danger {
+    background-color: #E53E3E; /* Vermelho Excluir */
+}
+
+/* Grupo de botões (usado na página de perfil) */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+/* Botões de Administrar Medicação */
+.btn-administer, .btn-administer-critical {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+.btn-administer { background-color: #3498db; }
+.btn-administer-critical { background-color: #2ecc71; }
+.btn-administer:hover, .btn-administer-critical:hover {
+    opacity: 0.85;
+}
+
+/* Botão de Excluir */
+.modal-footer {
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    text-align: right;
+}
+.btn-delete {
+    background-color: #E53E3E;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-delete:hover {
+    background-color: #C53030;
+}
+
+
+/* ------------------------------------------- */
+/* --- PÁGINAS DE CADASTRO E PERFILas --- */
+/* ------------------------------------------- */
+.config-container, .profile-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 500px;
+    max-width: 90%;
+    box-sizing: border-box;
+    margin: 40px auto;
+}
+.config-container h2, .profile-container h2 {
+    color: #2D3748;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 0;
+}
+
+.form-group-config, .profile-container .form-group {
+    margin-bottom: 20px;
+}
+.form-group-config label, .profile-container .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #4A5568;
+}
+.form-group-config input, 
+.form-group-config select,
+.profile-container .form-group input, 
+.profile-container .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #CBD5E0;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.profile-container .form-group input:disabled, 
+.profile-container .form-group select:disabled {
+    background-color: #F7FAFC;
+    cursor: not-allowed;
+    color: #718096;
+}
+
+#configError, #profileError {
+    color: #E53E3E;
+    text-align: center;
+    margin-top: 15px;
+    height: 20px;
+}
+/* ------------------------------------------- */
+/* --- BOTÃO FLUTUANTE DE ADICIONAR --- */
+/* ------------------------------------------- */
+/* Bloco Novo e Corrigido */
+.add-client-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #2D3748;
+    color: white;
+    font-size: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(45, 55, 72, 0.3);
+    z-index: 1000;
+    transition: all 0.2s;
+
+    /* O JS vai controlar a visibilidade, então começa escondido */
+    display: none; 
+
+    /* Estilos para quando ele estiver visível */
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 4px;
+}
+
+.add-client-btn:hover {
+    background-color: #4A5568;
+    transform: scale(1.1);
+}
+/* Adicionado para alinhar checkboxes e seus labels */
+.form-group-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group-inline label {
+    margin-bottom: 0; /* Remove a margem extra da label */
+}
