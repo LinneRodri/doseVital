@@ -1,10 +1,8 @@
-// --- CONSTANTES E VARIÁVEIS GLOBAIS ---
 const USERS_STORAGE_KEY = 'doseCertaUsers';
 const LOGGED_IN_USER_KEY = 'loggedInUser';
 let currentUser = null;
 let allUsers = [];
 
-// --- MAPEAMENTO DE ELEMENTOS DO DOM ---
 const formElements = {
     username: document.getElementById('profileUsername'),
     residenceName: document.getElementById('profileResidenceName'),
@@ -21,7 +19,6 @@ const formElements = {
 
 const editableFields = ['residenceName', 'password', 'phone', 'email', 'responsible', 'type'];
 
-// --- FUNÇÕES PRINCIPAIS ---
 
 document.addEventListener('DOMContentLoaded', () => {
     allUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
@@ -51,7 +48,7 @@ function populateForm() {
     formElements.email.value = config.email || '';
     formElements.responsible.value = config.responsible || '';
     formElements.type.value = config.type || '';
-    formElements.password.value = ''; // Limpa o campo de senha por segurança
+    formElements.password.value = ''; 
 }
 
 function toggleEditMode(isEditing) {

@@ -1,6 +1,5 @@
-/* =========================================== */
-/* --- ESTILOS GLOBAIS E PADRÕES --- */
-/* =========================================== */
+/* Estilos Gerais do Projeto */
+
 html, body {
     height: 100%;
     font-family: 'Inter', Arial, sans-serif;
@@ -10,14 +9,9 @@ html, body {
     color: #2D3748;
 }
 
-/* Garante que a tela de login apareça corretamente no início */
 #loginScreen { display: flex; }
 #dashboardScreen { display: none; }
 
-
-/* ------------------------------------------- */
-/* --- TELA DE LOGIN --- */
-/* ------------------------------------------- */
 #loginScreen {
     height: 100%;
     display: flex;
@@ -97,9 +91,6 @@ html, body {
     text-decoration: underline;
 }
 
-/* ------------------------------------------- */
-/* --- CABEÇALHO E MENU LATERAL --- */
-/* ------------------------------------------- */
 .header {
     background-color: #FFFFFF;
     padding: 0 25px;
@@ -115,7 +106,7 @@ html, body {
 .header-title {
     flex-grow: 1;
     text-align: center;
-    padding-left: 50px; /* Compensa o espaço do botão de menu */
+    padding-left: 50px;
 }
 
 .menu-icon {
@@ -143,7 +134,6 @@ html, body {
     background-color: #f1f5f9;
     color: #E53E3E;
 }
-
 
 .sidebar {
     height: 100%;
@@ -180,9 +170,6 @@ html, body {
     left: 0;
 }
 
-/* ------------------------------------------- */
-/* --- DASHBOARD --- */
-/* ------------------------------------------- */
 .dashboard {
     padding: 30px;
     max-width: 900px;
@@ -205,7 +192,7 @@ html, body {
     font-weight: bold;
     border-radius: 8px;
     font-size: 1.1em;
-    display: none; /* Controlado via JS */
+    display: none;
 }
 
 .filter-container {
@@ -238,9 +225,6 @@ html, body {
     transform: scale(1.05);
 }
 
-/* ------------------------------------------- */
-/* --- CARD DO PACIENTE --- */
-/* ------------------------------------------- */
 .paciente-card {
     display: flex;
     align-items: center;
@@ -287,19 +271,16 @@ html, body {
     margin-top: 4px;
 }
 
-/* ------------------------------------------- */
-/* --- MODAIS (Pop-ups) --- */
-/* ------------------------------------------- */
 .modal-overlay {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
     background-color: rgba(45, 55, 72, 0.6);
-    display: none; /* <-- ESSA É A LINHA MAIS IMPORTANTE */
-    justify-content: center; 
-    align-items: center; 
+    display: none;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
     backdrop-filter: blur(4px);
 }
@@ -308,12 +289,11 @@ html, body {
     background-color: white; padding: 30px 35px; border-radius: 12px;
     max-width: 500px; width: 90%;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    position: relative; /* CORREÇÃO: Necessário para o botão 'X' funcionar */
-    max-height: 85vh; /* Limita a altura máxima a 85% da tela */
+    position: relative;
+    max-height: 85vh;
     overflow-y: auto;
 }
 
-/* CORREÇÃO: Estilo do botão 'X' */
 .close-modal-btn {
     position: absolute;
     top: 10px;
@@ -349,7 +329,6 @@ html, body {
     font-family: 'Inter', Arial, sans-serif;
 }
 
-/* Lista de Medicação no Modal de Detalhes */
 #modalBody {
     max-height: 60vh;
     overflow-y: auto;
@@ -371,15 +350,6 @@ html, body {
     padding-right: 10px;
 }
 
-/* ------------------------------------------- */
-/* --- BOTÕES --- */
-/* ------------------------------------------- */
-
-/* ------------------------------------------- */
-/* --- BOTÕES --- */
-/* ------------------------------------------- */
-
-/* Base para todos os botões do projeto */
 .btn {
     text-decoration: none;
     padding: 10px 20px;
@@ -399,21 +369,19 @@ html, body {
     transform: translateY(-2px);
 }
 
-/* Cores dos botões */
 .btn-primary {
-    background-color: #28a745; /* Verde Adicionar/Salvar */
+    background-color: #28a745;
 }
 .btn-secondary {
-    background-color: #7f8c8d; /* Cinza Cancelar */
+    background-color: #7f8c8d;
 }
 .btn-info {
-    background-color: #34495e; /* Azul escuro Editar/Voltar */
+    background-color: #34495e;
 }
 .btn-danger {
-    background-color: #E53E3E; /* Vermelho Excluir */
+    background-color: #E53E3E;
 }
 
-/* Grupo de botões (usado na página de perfil) */
 .button-group {
     display: flex;
     justify-content: flex-end;
@@ -422,7 +390,6 @@ html, body {
     margin-top: 30px;
 }
 
-/* Botões de Administrar Medicação */
 .btn-administer, .btn-administer-critical {
     border: none;
     padding: 6px 12px;
@@ -439,7 +406,6 @@ html, body {
     opacity: 0.85;
 }
 
-/* Botão de Excluir */
 .modal-footer {
     margin-top: 25px;
     border-top: 1px solid #eee;
@@ -460,10 +426,6 @@ html, body {
     background-color: #C53030;
 }
 
-
-/* ------------------------------------------- */
-/* --- PÁGINAS DE CADASTRO E PERFILas --- */
-/* ------------------------------------------- */
 .config-container, .profile-container {
     background-color: white;
     padding: 40px;
@@ -491,9 +453,9 @@ html, body {
     font-weight: bold;
     color: #4A5568;
 }
-.form-group-config input, 
+.form-group-config input,
 .form-group-config select,
-.profile-container .form-group input, 
+.profile-container .form-group input,
 .profile-container .form-group select {
     width: 100%;
     padding: 12px;
@@ -501,7 +463,7 @@ html, body {
     border-radius: 8px;
     box-sizing: border-box;
 }
-.profile-container .form-group input:disabled, 
+.profile-container .form-group input:disabled,
 .profile-container .form-group select:disabled {
     background-color: #F7FAFC;
     cursor: not-allowed;
@@ -514,10 +476,7 @@ html, body {
     margin-top: 15px;
     height: 20px;
 }
-/* ------------------------------------------- */
-/* --- BOTÃO FLUTUANTE DE ADICIONAR --- */
-/* ------------------------------------------- */
-/* Bloco Novo e Corrigido */
+
 .add-client-btn {
     position: fixed;
     bottom: 30px;
@@ -533,11 +492,7 @@ html, body {
     box-shadow: 0 4px 20px rgba(45, 55, 72, 0.3);
     z-index: 1000;
     transition: all 0.2s;
-
-    /* O JS vai controlar a visibilidade, então começa escondido */
-    display: none; 
-
-    /* Estilos para quando ele estiver visível */
+    display: none;
     align-items: center;
     justify-content: center;
     padding-bottom: 4px;
@@ -547,17 +502,23 @@ html, body {
     background-color: #4A5568;
     transform: scale(1.1);
 }
-/* Adicionado para alinhar checkboxes e seus labels */
+
 .form-group-inline {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    padding-left: 2px;
 }
 
 .form-group-inline label {
-    margin-bottom: 0; /* Remove a margem extra da label */
+    margin: 0;
+    margin-right: auto;
+    margin-left: 10px;
+    font-weight: normal;
 }
-/* No final de style.css */
 
 .medication-entry {
     background-color: #f8f9fa;
@@ -565,7 +526,7 @@ html, body {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    position: relative; /* Para o botão de remover */
+    position: relative;
 }
 
 .remove-med-btn {
@@ -583,113 +544,68 @@ html, body {
     line-height: 24px;
     text-align: center;
 }
-/* --- CORREÇÕES DE DESIGN DO FORMULÁRIO DE MEDICAÇÃO --- */
 
-/* 1. AJUSTES NO CHECKBOX "É UM TRATAMENTO RECORRENTE?" */
-
-/* Container que segura o texto e o checkbox */
-.form-group-inline {
-  display: flex; /* Usa Flexbox para controlar o alinhamento */
-  flex-direction: row-reverse; /* INVERTE A ORDEM dos elementos (o checkbox vai para a direita) */
-  justify-content: flex-end; /* Alinha o conteúdo todo à esquerda */
-  align-items: center; /* Centraliza o texto e o checkbox verticalmente */
-  margin-bottom: 20px; /* Adiciona um espaçamento padrão abaixo */
-  padding-left: 2px; /* Pequeno ajuste para alinhar perfeitamente com os títulos acima */
-}
-
-/* O texto "É um tratamento recorrente?" */
-.form-group-inline label {
-  margin: 0; /* Remove margens antigas */
-  margin-right: auto; /* Empurra o checkbox para o outro lado */
-  margin-left: 10px; /* Cria um espaço entre o checkbox e o texto */
-  font-weight: normal; /* Mantém o texto com peso normal */
-}
-
-/* O checkbox em si */
 .form-group-inline .recorrente-checkbox {
-  transform: scale(1.5); /* AUMENTA O TAMANHO do checkbox em 50% */
-  /* O transform não afeta o layout, então não precisa de margem extra */
+    transform: scale(1.5);
 }
 
-
-/* 2. PADRONIZAÇÃO DOS CAMPOS "FREQUÊNCIA" E "DURAÇÃO" */
-
-/* O container de cada um (texto + caixa) */
 .form-group-recorrente {
-  display: flex;
-  flex-direction: column; /* Força o texto (label) a ficar EM CIMA da caixa (input) */
-  margin-bottom: 15px; /* Espaçamento entre eles */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 }
 
-/* O texto (label) */
 .form-group-recorrente label {
-  margin-bottom: 5px; /* Espaço entre o texto e a caixa */
-  font-size: 16px; /* Tamanho da fonte igual aos outros labels */
-  font-weight: 600; /* Deixa o texto em negrito, como os outros */
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
-/* A caixa de digitação (input) */
 .form-group-recorrente input {
-  width: 100%; /* Faz a caixa ocupar TODA a largura, como o campo "Nome do Medicamento" */
-  padding: 12px; /* Espaçamento interno para o texto ficar confortável */
-  border: 1px solid #E2E8F0; /* Borda sutil */
-  border-radius: 8px; /* Bordas arredondadas */
-  box-sizing: border-box; /* Garante que o padding não afete a largura total */
-  font-size: 1rem;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
 }
-/* --- ESTILO PARA O BOTÃO DE REMOVER MEDICAMENTO --- */
 
-/* Primeiro, precisamos garantir que o container do medicamento 
-  possa ser uma referência para o posicionamento do botão.
-*/
 .medicamento-item {
-  position: relative;
-  /* Adiciona um pouco de espaço à direita para o botão não sobrepor o conteúdo */
-  padding-right: 40px; 
+    position: relative;
+    padding-right: 40px;
 }
 
-/* O botão 'x' em si */
 .remove-med-btn {
-  /* Posicionamento */
-  position: absolute;
-  top: 15px;
-  right: 10px;
-
-  /* Aparência */
-  background: none;
-  border: none;
-  font-size: 28px;
-  font-weight: bold;
-  color: #a0aec0; /* Um cinza sutil */
-  cursor: pointer;
-  line-height: 1;
-  padding: 0;
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    font-weight: bold;
+    color: #a0aec0;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
 }
 
-/* Efeito ao passar o mouse */
 .remove-med-btn:hover {
-  color: #e53e3e; /* Vermelho para indicar perigo/exclusão */
+    color: #e53e3e;
 }
-/* =========================================== */
-/* --- AJUSTES NO FORMULÁRIO DE MEDICAÇÃO --- */
-/* =========================================== */
 
-/* Container principal dos botões de rádio */
 .tipo-tratamento-options {
-    display: flex;         /* ATIVA O FLEXBOX PARA ALINHAR OS ITENS LADO A LADO */
-    align-items: center;   /* Alinha verticalmente o texto e os botões */
-    justify-content: space-between; /* Distribui o espaço entre os itens */
-    padding: 10px 0;       /* Adiciona um respiro vertical */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
 }
 
-/* Container de cada par (botão + texto) */
 .tipo-tratamento-options div {
     display: flex;
     align-items: center;
-    gap: 8px; /* Cria um espaço entre o botão e o seu texto */
+    gap: 8px;
 }
 
-/* Aumenta o tamanho do botão de rádio */
 .tipo-tratamento-options input[type="radio"] {
-    transform: scale(1.4); /* AUMENTA O TAMANHO DO BOTÃO EM 40% */
+    transform: scale(1.4);
 }

@@ -1,8 +1,7 @@
-// --- CONSTANTES GLOBAIS ---
 const USERS_STORAGE_KEY = 'doseCertaUsers';
 const LOGGED_IN_USER_KEY = 'loggedInUser';
 
-// --- ESTADO GLOBAL DA APLICAÇÃO ---
+
 let allUsersData = [];
 let loggedInUser = null;
 let patientData = [];
@@ -11,7 +10,6 @@ let currentFilter = 'todos';
 let firstMedicationEntryTemplate;
 let medCounter = 1;
 
-// --- INICIALIZAÇÃO DA APLICAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
     allUsersData = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
 
@@ -24,23 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus();
 });
 
-// --- CONFIGURAÇÃO DE EVENTOS ---
+
 function setupEventListeners() {
-    // Botões de login e logout
     document.querySelector('.login-btn')?.addEventListener('click', handleLogin);
     document.querySelector('.logout-btn')?.addEventListener('click', fazerLogout);
-
-    // Botões de abrir e fechar modais
     document.getElementById('addClientBtn')?.addEventListener('click', abrirNovoClienteModal);
     document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', fecharTodosModais));
-    
-    // Botão de adicionar medicamento
     document.getElementById('add-med-btn')?.addEventListener('click', adicionarNovoMedicamento);
-
-    // Formulário de novo paciente
     document.getElementById('newClientForm')?.addEventListener('submit', adicionarNovoCliente);
-
-    // Event listener para os botões de rádio (funciona para botões novos também)
     document.body.addEventListener('change', function(event) {
         if (event.target.name.startsWith('tipoTratamento')) {
             const medicationEntry = event.target.closest('.medicamento-item');
@@ -70,7 +59,6 @@ function setupEventListeners() {
     });
 }
 
-// --- LÓGICA DE AUTENTICAÇÃO ---
 function checkLoginStatus() {
     const loggedInUsername = localStorage.getItem(LOGGED_IN_USER_KEY);
     if (loggedInUsername) {
@@ -122,7 +110,6 @@ function fazerLogout() {
     window.location.reload();
 }
 
-// --- LÓGICA DO DASHBOARD ---
 function loadDashboardScreen() {
     patientData = loggedInUser.patients || [];
     const displayName = loggedInUser.residenceConfig?.name || loggedInUser.username;
@@ -130,7 +117,7 @@ function loadDashboardScreen() {
     
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboardScreen').style.display = 'block';
-    document.getElementById('addClientBtn').style.display = 'flex'; // MOSTRA O BOTÃO
+    document.getElementById('addClientBtn').style.display = 'flex'; 
 
     startClockAndRender();
 }
@@ -208,7 +195,6 @@ function renderPatientCards() {
     alertaGeral.innerHTML = `<strong>${totalOverdueMeds}</strong> Dose(s) Críticas Atrasadas. Priorizar!`;
 }
 
-// --- LÓGICA DOS MODAIS ---
 function abrirNovoClienteModal() {
     document.getElementById('newClientForm').reset();
     const medicationsContainer = document.getElementById('medications-container');
@@ -236,18 +222,16 @@ function fecharTodosModais() {
 function adicionarNovoMedicamento() {
     const medicationsContainer = document.getElementById('medications-container');
     const novoMedicamento = firstMedicationEntryTemplate.cloneNode(true);
-    medCounter++; // Incrementa o contador para nomes de rádio únicos
+    medCounter++; 
 
-    // Limpa os valores dos inputs clonados
     novoMedicamento.querySelectorAll('input').forEach(input => {
         if (input.type === 'radio') {
-            // Atualiza os 'name' e 'id' para serem únicos
+            
             const oldId = input.id;
             const newName = `tipoTratamento_${medCounter}`;
             input.name = newName;
             input.id = oldId.split('_')[0] + `_${medCounter}`;
 
-            // Atualiza o 'for' da label correspondente
             const label = novoMedicamento.querySelector(`label[for="${oldId}"]`);
             if (label) {
                 label.htmlFor = input.id;
@@ -257,13 +241,9 @@ function adicionarNovoMedicamento() {
         }
     });
 
-    // Garante que o primeiro rádio ('doseUnica') esteja marcado
     novoMedicamento.querySelector('input[value="unica"]').checked = true;
-    
-    // Esconde as opções recorrentes
     novoMedicamento.querySelector('.opcoes-recorrentes').style.display = 'none';
 
-    // Adiciona o botão de remover
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
     removeBtn.textContent = '×';
