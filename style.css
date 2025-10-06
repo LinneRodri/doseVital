@@ -670,3 +670,26 @@ html, body {
 .remove-med-btn:hover {
   color: #e53e3e; /* Vermelho para indicar perigo/exclusão */
 }
+/* =========================================== */
+/* --- AJUSTES NO FORMULÁRIO DE MEDICAÇÃO --- */
+/* =========================================== */
+
+/* Container principal dos botões de rádio */
+.tipo-tratamento-options {
+    display: flex;         /* ATIVA O FLEXBOX PARA ALINHAR OS ITENS LADO A LADO */
+    align-items: center;   /* Alinha verticalmente o texto e os botões */
+    justify-content: space-between; /* Distribui o espaço entre os itens */
+    padding: 10px 0;       /* Adiciona um respiro vertical */
+}
+
+/* Container de cada par (botão + texto) */
+.tipo-tratamento-options div {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Cria um espaço entre o botão e o seu texto */
+}
+
+/* Aumenta o tamanho do botão de rádio */
+.tipo-tratamento-options input[type="radio"] {
+    transform: scale(1.4); /* AUMENTA O TAMANHO DO BOTÃO EM 40% */
+}

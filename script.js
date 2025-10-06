@@ -8,46 +8,66 @@ let loggedInUser = null;
 let patientData = [];
 let intervalId;
 let currentFilter = 'todos';
-let firstMedicationEntryTemplate; // Guardará o modelo do campo de medicamento
+let firstMedicationEntryTemplate;
+let medCounter = 1;
 
 // --- INICIALIZAÇÃO DA APLICAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega os dados dos usuários do Local Storage
     allUsersData = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
-    
-    // Clona o primeiro campo de medicamento para usar como modelo ao adicionar novos
+
     const medicationsContainer = document.getElementById('medications-container');
     if (medicationsContainer && medicationsContainer.querySelector('.medicamento-item')) {
         firstMedicationEntryTemplate = medicationsContainer.querySelector('.medicamento-item').cloneNode(true);
     }
 
-    // Adiciona os event listeners principais
     setupEventListeners();
-    
-    // Verifica se há um usuário logado
     checkLoginStatus();
 });
 
-// --- FUNÇÕES DE CONFIGURAÇÃO DE EVENTOS ---
+// --- CONFIGURAÇÃO DE EVENTOS ---
 function setupEventListeners() {
-    // Botão de adicionar medicamento dentro do modal
-    const addMedBtn = document.getElementById('add-med-btn');
-    if (addMedBtn) addMedBtn.addEventListener('click', adicionarNovoMedicamento);
+    // Botões de login e logout
+    document.querySelector('.login-btn')?.addEventListener('click', handleLogin);
+    document.querySelector('.logout-btn')?.addEventListener('click', fazerLogout);
 
-    // Botão que abre o modal de adicionar paciente (o '+' flutuante)
-    const addClientBtn = document.getElementById('addClientBtn');
-    if (addClientBtn) addClientBtn.addEventListener('click', abrirNovoClienteModal);
+    // Botões de abrir e fechar modais
+    document.getElementById('addClientBtn')?.addEventListener('click', abrirNovoClienteModal);
+    document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', fecharTodosModais));
+    
+    // Botão de adicionar medicamento
+    document.getElementById('add-med-btn')?.addEventListener('click', adicionarNovoMedicamento);
 
-    // Botão de fechar o modal de adicionar paciente (o 'x')
-    const closeClientBtn = document.querySelector('#addClientModal .close-modal-btn');
-    if (closeClientBtn) closeClientBtn.addEventListener('click', fecharNovoClienteModal);
+    // Formulário de novo paciente
+    document.getElementById('newClientForm')?.addEventListener('submit', adicionarNovoCliente);
 
-    // Botão de fechar o modal de detalhes do paciente
-    const closeDetailsBtn = document.querySelector('#detailsModal .close-modal-btn');
-    if(closeDetailsBtn) closeDetailsBtn.addEventListener('click', fecharModal);
+    // Event listener para os botões de rádio (funciona para botões novos também)
+    document.body.addEventListener('change', function(event) {
+        if (event.target.name.startsWith('tipoTratamento')) {
+            const medicationEntry = event.target.closest('.medicamento-item');
+            const opcoesDiv = medicationEntry.querySelector('.opcoes-recorrentes');
+            const campoDuracao = medicationEntry.querySelector('.campoDuracao');
+            const valorSelecionado = event.target.value;
 
-    // Configura os checkboxes que já existem na página
-    configurarCheckboxes();
+            const duracaoInput = medicationEntry.querySelector('.duracao-input');
+            const frequenciaInput = medicationEntry.querySelector('.frequencia-input');
+
+            if (valorSelecionado === 'continuo') {
+                opcoesDiv.style.display = 'block';
+                campoDuracao.style.display = 'none';
+                duracaoInput.required = false;
+                frequenciaInput.required = true;
+            } else if (valorSelecionado === 'definida') {
+                opcoesDiv.style.display = 'block';
+                campoDuracao.style.display = 'block';
+                duracaoInput.required = true;
+                frequenciaInput.required = true;
+            } else { // 'unica'
+                opcoesDiv.style.display = 'none';
+                duracaoInput.required = false;
+                frequenciaInput.required = false;
+            }
+        }
+    });
 }
 
 // --- LÓGICA DE AUTENTICAÇÃO ---
@@ -64,6 +84,7 @@ function checkLoginStatus() {
     } else {
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('dashboardScreen').style.display = 'none';
+        document.getElementById('addClientBtn').style.display = 'none';
     }
 }
 
@@ -71,7 +92,6 @@ function handleLogin() {
     const usernameInput = document.getElementById('loginUsername');
     const passwordInput = document.getElementById('loginPassword');
     const errorElement = document.getElementById('loginError');
-    
     const username = usernameInput.value.trim().toLowerCase();
     const password = passwordInput.value.trim();
     errorElement.textContent = '';
@@ -81,13 +101,13 @@ function handleLogin() {
         return;
     }
 
-    const foundUser = allUsersData.find(user => 
+    const foundUser = allUsersData.find(user =>
         user.username.toLowerCase() === username && user.password === password
     );
 
     if (foundUser) {
-        localStorage.setItem(LOGGED_IN_USER_KEY, foundUser.username); 
-        loggedInUser = foundUser; 
+        localStorage.setItem(LOGGED_IN_USER_KEY, foundUser.username);
+        loggedInUser = foundUser;
         loadDashboardScreen();
     } else {
         errorElement.textContent = 'Usuário ou senha incorretos.';
@@ -110,9 +130,7 @@ function loadDashboardScreen() {
     
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboardScreen').style.display = 'block';
-    
-    const addClientBtn = document.getElementById('addClientBtn');
-    if (addClientBtn) addClientBtn.style.display = 'flex';
+    document.getElementById('addClientBtn').style.display = 'flex'; // MOSTRA O BOTÃO
 
     startClockAndRender();
 }
@@ -120,7 +138,7 @@ function loadDashboardScreen() {
 function startClockAndRender() {
     if (intervalId) clearInterval(intervalId);
     checkScheduleAndRender();
-    intervalId = setInterval(checkScheduleAndRender, 30000); // Verifica a cada 30 segundos
+    intervalId = setInterval(checkScheduleAndRender, 30000);
 }
 
 function checkScheduleAndRender() {
@@ -128,8 +146,7 @@ function checkScheduleAndRender() {
     document.getElementById('relogioAtual').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
     patientData.forEach(patient => {
-        if (!patient.meds) patient.meds = [];
-        patient.meds.forEach(med => {
+        (patient.meds || []).forEach(med => {
             if (!med.given && now > new Date(med.dateTime)) {
                 med.overdue = true;
             }
@@ -146,8 +163,7 @@ function renderPatientCards() {
     const getPatientStatusKey = (patient) => {
         if (!patient.meds || patient.meds.length === 0 || patient.meds.every(med => med.given)) return 'verde';
         if (patient.meds.some(med => med.overdue && !med.given)) return 'vermelho';
-        if (patient.meds.some(med => !med.given)) return 'amarelo';
-        return 'verde';
+        return 'amarelo';
     };
 
     let filteredPatients = patientData.filter(p => currentFilter === 'todos' || getPatientStatusKey(p) === currentFilter);
@@ -155,7 +171,7 @@ function renderPatientCards() {
     filteredPatients.sort((a, b) => statusOrder[getPatientStatusKey(a)] - statusOrder[getPatientStatusKey(b)]);
 
     if (filteredPatients.length === 0) {
-        container.innerHTML = `<p style="text-align: center; color: #777;">Nenhum paciente para exibir.</p>`;
+        container.innerHTML = `<p class="empty-state-message">Nenhum paciente para exibir.</p>`;
         return;
     }
 
@@ -164,16 +180,16 @@ function renderPatientCards() {
         totalOverdueMeds += overdueMeds.length;
 
         let statusText = 'Todas as Doses em Dia';
-        let cardBorderColor = '#2ecc71'; // Verde
+        let cardBorderColor = '#2ecc71';
 
         if (overdueMeds.length > 0) {
             statusText = `${overdueMeds.length} Dose(s) Atrasada(s)`;
-            cardBorderColor = '#e74c3c'; // Vermelho
+            cardBorderColor = '#e74c3c';
         } else {
             const pendingMeds = patient.meds.filter(med => !med.given).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
             if (pendingMeds.length > 0) {
                 statusText = `Próxima Dose às ${new Date(pendingMeds[0].dateTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-                cardBorderColor = '#f1c40f'; // Amarelo
+                cardBorderColor = '#f1c40f';
             }
         }
         const initials = patient.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -192,13 +208,10 @@ function renderPatientCards() {
     alertaGeral.innerHTML = `<strong>${totalOverdueMeds}</strong> Dose(s) Críticas Atrasadas. Priorizar!`;
 }
 
-
-// --- LÓGICA DO MODAL DE ADICIONAR PACIENTE ---
+// --- LÓGICA DOS MODAIS ---
 function abrirNovoClienteModal() {
-    const modal = document.getElementById('addClientModal');
-    const form = document.getElementById('newClientForm');
+    document.getElementById('newClientForm').reset();
     const medicationsContainer = document.getElementById('medications-container');
-    form.reset();
     
     while (medicationsContainer.children.length > 1) {
         medicationsContainer.removeChild(medicationsContainer.lastChild);
@@ -206,69 +219,63 @@ function abrirNovoClienteModal() {
     
     const firstEntry = medicationsContainer.querySelector('.medicamento-item');
     if (firstEntry) {
-        firstEntry.querySelector('.med-name-input').value = '';
-        firstEntry.querySelector('.med-time-input').value = '';
-        const firstCheckbox = firstEntry.querySelector('.recorrente-checkbox');
-        const firstOptions = firstEntry.querySelector('.opcoes-recorrentes');
-        if(firstCheckbox) firstCheckbox.checked = false;
-        if(firstOptions) firstOptions.style.display = 'none';
+        const radio = firstEntry.querySelector('input[name="tipoTratamento_1"]');
+        if(radio) radio.checked = true;
+        
+        const opcoes = firstEntry.querySelector('.opcoes-recorrentes');
+        if(opcoes) opcoes.style.display = 'none';
     }
-    modal.style.display = 'flex';
+    
+    document.getElementById('addClientModal').style.display = 'flex';
 }
 
-function fecharNovoClienteModal() {
-    document.getElementById('addClientModal').style.display = 'none';
+function fecharTodosModais() {
+    document.querySelectorAll('.modal-overlay').forEach(modal => modal.style.display = 'none');
 }
 
 function adicionarNovoMedicamento() {
     const medicationsContainer = document.getElementById('medications-container');
     const novoMedicamento = firstMedicationEntryTemplate.cloneNode(true);
-    
-    novoMedicamento.querySelector('.med-name-input').value = '';
-    novoMedicamento.querySelector('.med-time-input').value = '';
-    novoMedicamento.querySelector('.recorrente-checkbox').checked = false;
-    novoMedicamento.querySelector('.opcoes-recorrentes').style.display = 'none';
-    
-    // --- NOVO TRECHO ADICIONADO AQUI ---
-    // 1. Cria o elemento do botão
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button'; // Impede que o botão envie o formulário
-    removeBtn.textContent = '×'; // O caractere 'x' de fechar
-    removeBtn.className = 'remove-med-btn'; // Classe para o CSS estilizar
+    medCounter++; // Incrementa o contador para nomes de rádio únicos
 
-    // 2. Define o que acontece quando o botão é clicado
-    removeBtn.onclick = () => {
-        novoMedicamento.remove(); // Remove o bloco de medicamento inteiro
-    };
+    // Limpa os valores dos inputs clonados
+    novoMedicamento.querySelectorAll('input').forEach(input => {
+        if (input.type === 'radio') {
+            // Atualiza os 'name' e 'id' para serem únicos
+            const oldId = input.id;
+            const newName = `tipoTratamento_${medCounter}`;
+            input.name = newName;
+            input.id = oldId.split('_')[0] + `_${medCounter}`;
 
-    // 3. Adiciona o botão 'x' ao novo bloco de medicamento
-    novoMedicamento.appendChild(removeBtn);
-    // --- FIM DO NOVO TRECHO ---
-    
-    medicationsContainer.appendChild(novoMedicamento);
-    configurarCheckboxes();
-}
-
-function configurarCheckboxes() {
-    const todosCheckboxes = document.querySelectorAll('.recorrente-checkbox');
-    todosCheckboxes.forEach(checkbox => {
-        checkbox.removeEventListener('change', toggleOpcoesRecorrentes);
-        checkbox.addEventListener('change', toggleOpcoesRecorrentes);
+            // Atualiza o 'for' da label correspondente
+            const label = novoMedicamento.querySelector(`label[for="${oldId}"]`);
+            if (label) {
+                label.htmlFor = input.id;
+            }
+        } else {
+           input.value = '';
+        }
     });
-}
+
+    // Garante que o primeiro rádio ('doseUnica') esteja marcado
+    novoMedicamento.querySelector('input[value="unica"]').checked = true;
     
-function toggleOpcoesRecorrentes(event) {
-    const checkbox = event.target;
-    const paiMedicamento = checkbox.closest('.medicamento-item');
-    const opcoesDiv = paiMedicamento.querySelector('.opcoes-recorrentes');
-    if (checkbox.checked) {
-        opcoesDiv.style.display = 'block';
-    } else {
-        opcoesDiv.style.display = 'none';
-    }
+    // Esconde as opções recorrentes
+    novoMedicamento.querySelector('.opcoes-recorrentes').style.display = 'none';
+
+    // Adiciona o botão de remover
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = '×';
+    removeBtn.className = 'remove-med-btn';
+    removeBtn.onclick = () => novoMedicamento.remove();
+    novoMedicamento.appendChild(removeBtn);
+
+    medicationsContainer.appendChild(novoMedicamento);
 }
 
-function adicionarNovoCliente() {
+function adicionarNovoCliente(event) {
+    event.preventDefault();
     const errorSpan = document.getElementById('clientError');
     errorSpan.textContent = '';
 
@@ -285,7 +292,14 @@ function adicionarNovoCliente() {
     for (const entry of medicationEntries) {
         const medName = entry.querySelector('.med-name-input').value.trim();
         const medTime = entry.querySelector('.med-time-input').value;
-        const isRecurring = entry.querySelector('.recorrente-checkbox').checked;
+        const treatmentTypeRadio = entry.querySelector('input[name^="tipoTratamento"]:checked');
+        
+        if (!treatmentTypeRadio) {
+            errorSpan.textContent = "Selecione um tipo de tratamento.";
+            return;
+        }
+        const treatmentType = treatmentTypeRadio.value;
+
         if (!medName || !medTime) {
             errorSpan.textContent = "Preencha o nome e o horário para todos os medicamentos.";
             return;
@@ -296,55 +310,60 @@ function adicionarNovoCliente() {
         const [startHour, startMinute] = medTime.split(':');
         firstDoseDate.setHours(parseInt(startHour, 10), parseInt(startMinute, 10), 0, 0);
 
-        if (!isRecurring) {
-            if (firstDoseDate < now) {
-                firstDoseDate.setDate(firstDoseDate.getDate() + 1);
-            }
-            allMedsForPatient.push({
-                name: medName,
-                dateTime: firstDoseDate.toISOString(),
-                given: false, overdue: false, givenAt: null
-            });
+        if (firstDoseDate < now) {
+            firstDoseDate.setDate(firstDoseDate.getDate() + 1);
+        }
+
+        if (treatmentType === 'unica') {
+            allMedsForPatient.push({ name: medName, dateTime: firstDoseDate.toISOString(), given: false, overdue: false, givenAt: null });
         } else {
             const frequencyInput = entry.querySelector('.frequencia-input');
-            const durationInput = entry.querySelector('.duracao-input');
             const frequency = parseInt(frequencyInput.value, 10);
-            const duration = parseInt(durationInput.value, 10);
-
-            if (isNaN(frequency) || isNaN(duration) || frequency < 1 || duration < 1) {
-                errorSpan.textContent = "Preencha a frequência e a duração corretamente.";
+            if (isNaN(frequency) || frequency < 1) {
+                errorSpan.textContent = "Preencha a frequência corretamente.";
                 return;
             }
 
             let currentDoseDate = new Date(firstDoseDate.getTime());
-             if (currentDoseDate < now) {
-                currentDoseDate.setDate(currentDoseDate.getDate() + 1);
-            }
-            const endDate = new Date(currentDoseDate.getTime());
-            endDate.setDate(endDate.getDate() + duration);
+            if (treatmentType === 'definida') {
+                const durationInput = entry.querySelector('.duracao-input');
+                const duration = parseInt(durationInput.value, 10);
+                if (isNaN(duration) || duration < 1) {
+                    errorSpan.textContent = "Preencha a duração corretamente.";
+                    return;
+                }
+                const endDate = new Date(currentDoseDate.getTime());
+                endDate.setDate(endDate.getDate() + duration);
+                
+                while (currentDoseDate < endDate) {
+                    allMedsForPatient.push({ name: medName, dateTime: currentDoseDate.toISOString(), given: false, overdue: false, givenAt: null });
+                    currentDoseDate.setHours(currentDoseDate.getHours() + frequency);
+                }
+            } else { // 'continuo'
+                const endDate = new Date(currentDoseDate.getTime());
+                endDate.setDate(endDate.getDate() + 30); // Gera agenda para 30 dias
 
-            while(currentDoseDate < endDate){
-                 allMedsForPatient.push({
-                    name: medName,
-                    dateTime: currentDoseDate.toISOString(),
-                    given: false, overdue: false, givenAt: null
-                });
-                currentDoseDate.setHours(currentDoseDate.getHours() + frequency);
+                while(currentDoseDate < endDate){
+                    allMedsForPatient.push({ name: medName, dateTime: currentDoseDate.toISOString(), given: false, overdue: false, givenAt: null });
+                    currentDoseDate.setHours(currentDoseDate.getHours() + frequency);
+                }
             }
         }
     }
+
     if (allMedsForPatient.length === 0) {
         errorSpan.textContent = "Adicione pelo menos um medicamento.";
         return;
     }
+
     if (!loggedInUser.patients) loggedInUser.patients = [];
     loggedInUser.patients.push({ id: generateId(), name: nome, room: quarto, meds: allMedsForPatient });
     saveUserData();
     checkScheduleAndRender();
-    fecharNovoClienteModal();
+    fecharTodosModais();
 }
 
-// --- DEMAIS FUNÇÕES E UTILITÁRIOS ---
+// --- DEMAIS FUNÇÕES ---
 function saveUserData() {
     if (!loggedInUser) return;
     const userIndex = allUsersData.findIndex(u => u.username.toLowerCase() === loggedInUser.username.toLowerCase());
@@ -364,7 +383,7 @@ function excluirPaciente(patientId) {
     if (confirm(`Excluir "${patientData[patientIndex].name}"?`)) {
         patientData.splice(patientIndex, 1);
         saveUserData();
-        fecharModal();
+        fecharTodosModais();
         renderPatientCards();
     }
 }
@@ -372,7 +391,7 @@ function excluirPaciente(patientId) {
 function setFilter(filterKey) {
     currentFilter = filterKey;
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active-filter'));
-    document.querySelector(`[data-filter="${filterKey}"]`).classList.add('active-filter');
+    document.querySelector(`[data-filter="${filterKey}"]`)?.classList.add('active-filter');
     renderPatientCards();
 }
 
@@ -404,12 +423,8 @@ function abrirDetalhes(patientId) {
     modal.style.display = 'flex';
 }
 
-function fecharModal() {
-    document.getElementById('detailsModal').style.display = 'none';
-}
-
 function toggleMenu() {
-    document.getElementById('sidebarMenu').classList.toggle('open');
+    document.getElementById('sidebarMenu')?.classList.toggle('open');
 }
 
 function toggleMedicationGiven(patientId, medIndex) {
@@ -419,10 +434,10 @@ function toggleMedicationGiven(patientId, medIndex) {
         med.given = !med.given;
         med.givenAt = med.given ? new Date().toISOString() : null;
         if (med.given) {
-            med.overdue = false; // Se foi administrado, não está mais atrasado
+            med.overdue = false;
         }
         saveUserData();
-        abrirDetalhes(patientId); // Reabre o modal para atualizar a visualização
-        checkScheduleAndRender(); // Atualiza os cards do dashboard
+        abrirDetalhes(patientId);
+        checkScheduleAndRender();
     }
 }

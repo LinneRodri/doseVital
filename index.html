@@ -60,63 +60,72 @@
             <div id="patientListContainer"></div>
         </div>
     </div>
-
     <div id="addClientModal" class="modal-overlay">
-    <div class="modal-content">
-        <span class="close-modal-btn" onclick="fecharNovoClienteModal()">&times;</span>
-        <h3 style="text-align: center;">Adicionar Novo Paciente</h3>
-        <form id="newClientForm" onsubmit="event.preventDefault(); adicionarNovoCliente();">
-            <div class="form-group">
-                <label for="clientName">Nome Completo</label>
-                <input type="text" id="clientName" placeholder="Ex: Lucas Mendes" required>
-            </div>
-            <div class="form-group">
-                <label for="clientRoom">Quarto / Leito</label>
-                <input type="text" id="clientRoom" placeholder="Ex: Quarto 205" required>
-            </div>
-
-            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E2E8F0;">
-            <h4 style="margin-bottom: 15px;">Informações da Medicação</h4>
-
-            <div id="medications-container">
-                            <div class="medication-entry medicamento-item">
+        <div class="modal-content">
+            <span class="close-modal-btn">&times;</span>
+            <h3 style="text-align: center;">Adicionar Novo Paciente</h3>
+            <form id="newClientForm">
                 <div class="form-group">
-                    <label>Nome do Medicamento</label>
-                    <input type="text" class="med-name-input" placeholder="Ex: Dipirona" required>
+                    <label for="clientName">Nome Completo</label>
+                    <input type="text" id="clientName" placeholder="Ex: Lucas Mendes" required>
                 </div>
                 <div class="form-group">
-                    <label>Horário da Dose</label>
-                    <input type="time" class="med-time-input" required>
+                    <label for="clientRoom">Quarto / Leito</label>
+                    <input type="text" id="clientRoom" placeholder="Ex: Quarto 205" required>
                 </div>
-                <div class="form-group form-group-inline">
-                    <input type="checkbox" class="recorrente-checkbox">
-                    <label>É um tratamento recorrente?</label>
-                </div>
-                <div class="opcoes-recorrentes" style="display: none;">
-                    <h4>Detalhes do Tratamento</h4>
-                    <div class="form-group-recorrente">
-                        <label for="frequencia">A cada quantas horas?</label>
-                        <input type="number" class="frequencia-input" placeholder="Ex: 8">
-                    </div>
-                    <div class="form-group-recorrente">
-                        <label for="duracao">Por quantos dias?</label>
-                        <input type="number" class="duracao-input" placeholder="Ex: 7">
-                    </div>
-                </div>
-            </div>
-            </div>
 
-            <button type="button" id="add-med-btn" class="btn btn-info" style="width: 100%; margin-top: 10px;">Adicionar outro medicamento</button>
+                <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E2E8F0;">
+                <h4 style="margin-bottom: 15px;">Informações da Medicação</h4>
 
-            <p id="clientError" style="color: #e74c3c; height: 1em;"></p>
-        
-            <div class="button-group">
-                <button type="button" onclick="fecharNovoClienteModal()" class="btn btn-secondary">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Adicionar</button>
-            </div>
-        </form>
+                <div id="medications-container">
+                    <div class="medication-entry medicamento-item">
+                        <div class="form-group">
+                            <label>Nome do Medicamento</label>
+                            <input type="text" class="med-name-input" placeholder="Ex: Dipirona" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Horário da Primeira Dose</label>
+                            <input type="time" class="med-time-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Tratamento</label>
+                            <div class="tipo-tratamento-options">
+                                <div>
+                                    <input type="radio" id="doseUnica_1" name="tipoTratamento_1" value="unica" checked>
+                                    <label for="doseUnica_1">Dose Única</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="usoContinuo_1" name="tipoTratamento_1" value="continuo">
+                                    <label for="usoContinuo_1">Uso Contínuo</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="duracaoDefinida_1" name="tipoTratamento_1" value="definida">
+                                    <label for="duracaoDefinida_1">Duração Definida</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="opcoes-recorrentes" style="display: none;">
+                            <div class="form-group-recorrente">
+                                <label>Frequência (a cada quantas horas)</label>
+                                <input type="number" class="frequencia-input" placeholder="Ex: 8">
+                            </div>
+                            <div class="form-group-recorrente campoDuracao">
+                                <label>Duração do tratamento (em dias)</label>
+                                <input type="number" class="duracao-input" placeholder="Ex: 7">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="add-med-btn" class="btn btn-info" style="width: 100%; margin-top: 10px;">Adicionar outro medicamento</button>
+                <p id="clientError" style="color: #e74c3c; height: 1em;"></p>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="fecharTodosModais()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+    
     
     <button id="addClientBtn" onclick="abrirNovoClienteModal()" class="add-client-btn">+</button>
 
