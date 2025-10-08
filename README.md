@@ -1,4 +1,4 @@
-##**Ritmo Vital**##
+<h1>Dose Vital</h1>
 
 Sistema de Administração de Medicamentos
 
